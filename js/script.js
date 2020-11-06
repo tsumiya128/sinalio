@@ -1,5 +1,54 @@
+phina.globalize();
+/***************************************
+ * メインシーン
+ */
+phina.define("MainScene", {
+    superClass: "DisplayScene",
+    init: function () {
+        this.superInit();
+
+        // 背景色
+        this.backgroundColor = "black";
+
+        // 背景用グループ
+        this.backImageGroup = DisplayElement().addChildTo(this);
+
+        // テキストエリアの矩形
+        this.labelRect = LabelRect().addChildTo(this)
+            .setPosition(this.gridX.center(), this.gridY.center(5.5));
+
+        this.labelRect.texts = MAINNTEXTS;
+        this.labelRect.textIndex = 0;
+        this.labelRect.charIndex = 0;
+
+        this.setPhase();
+    },
+    update: function (app) {
+        //クリックかEnterキーの入力があった場合
+        if (app.pointer.getPointingStart() || app.keyboard.getKeyDown("enter")) {
+            if (this.labelRect.textAll) {//テキスト全部表示済み
+                this.labelRect.nextText();
+                // 次の背景に切替
+                this.setPhase();
+            } else {
+                this.labelRect.showAllText();
+            }
+        } else {
+            this.labelRect.addChar();
+        }
+
+        if (this.labelRect.textAll) {
+            this.labelRect.nextTriangle.show();
+        } else {
+            this.labelRect.nextTriangle.hide();
+        }
+    },
+});
 const MAINNTEXTS = [
-'hajimemasite',
+"hajimemasite",
+"bokunonamaeha",
+"tsumiyatoiimasu"
+""
 ];
 /***************************************
  * テキスト表示&文字送り
@@ -69,49 +118,4 @@ phina.define("LabelRect", {
            return text[this.charIndex++];
        }
     }
-});
-/***************************************
- * メインシーン
- */
-phina.define("MainScene", {
-    superClass: "DisplayScene",
-    init: function () {
-        this.superInit();
-
-        // 背景色
-        this.backgroundColor = "black";
-
-        // 背景用グループ
-        this.backImageGroup = DisplayElement().addChildTo(this);
-
-        // テキストエリアの矩形
-        this.labelRect = LabelRect().addChildTo(this)
-            .setPosition(this.gridX.center(), this.gridY.center(5.5));
-
-        this.labelRect.texts = MAINNTEXTS;
-        this.labelRect.textIndex = 0;
-        this.labelRect.charIndex = 0;
-
-        this.setPhase();
-    },
-    update: function (app) {
-        //クリックかEnterキーの入力があった場合
-        if (app.pointer.getPointingStart() || app.keyboard.getKeyDown("enter")) {
-            if (this.labelRect.textAll) {//テキスト全部表示済み
-                this.labelRect.nextText();
-                // 次の背景に切替
-                this.setPhase();
-            } else {
-                this.labelRect.showAllText();
-            }
-        } else {
-            this.labelRect.addChar();
-        }
-
-        if (this.labelRect.textAll) {
-            this.labelRect.nextTriangle.show();
-        } else {
-            this.labelRect.nextTriangle.hide();
-        }
-    },
 });
